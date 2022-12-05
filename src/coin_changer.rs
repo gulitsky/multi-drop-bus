@@ -12,9 +12,9 @@ pub enum Command {
     #[deku(id = "0x0b")]
     Poll,
     #[deku(id = "0x0c")]
-    CoinType {},
+    CoinType { test: u8 },
     #[deku(id = "0x0d")]
-    Dispense {},
+    Dispense { test: u8 },
     #[deku(id = "0x0f")]
     Expansion,
 }
@@ -27,16 +27,19 @@ pub struct SetupResponse {
 }
 
 #[derive(DekuRead)]
+#[deku(type = "u8")]
 pub enum Status {
-    NoCredit,
-    DefectiveTubeSensor,
-    DoubleArrival,
-    AcceptorUnplugged,
-    TubeJam,
-    RomChecksumError,
-    CoinRoutingError,
-    ChangerBusy,
-    ChangerWasReset,
-    CoinJam,
-    PossibleCreditedCoinRemoval,
+    EscrowRequest = 0b00000001,
+    ChangerPayoutBusy = 0b00000010,
+    NoCredit = 0b00000011,
+    DefectiveTubeSensor = 0b00000100,
+    DoubleArrival = 0b00000101,
+    AcceptorUnplugged = 0b00000110,
+    TubeJam = 0b00000111,
+    RomChecksumError = 0b00001000,
+    CoinRoutingError = 0b00001001,
+    ChangerBusy = 0b00001010,
+    ChangerWasReset = 0b00001011,
+    CoinJam = 0b00001100,
+    PossibleCreditedCoinRemoval = 0b00001101,
 }
