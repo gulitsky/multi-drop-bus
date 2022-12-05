@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 deku = { version = "0.15.0" }
+flagset = "0.4.3"
 
 [dev-dependencies]
 criterion = "0.4.0"

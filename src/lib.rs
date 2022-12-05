@@ -1,9 +1,11 @@
 use deku::prelude::*;
 
+pub mod bill_validator;
+pub mod cashless_device;
 pub mod coin_changer;
 
 #[derive(DekuRead)]
-pub struct Block {
+pub struct MasterBlock {
     pub response_code: ResponseCode,
 }
 

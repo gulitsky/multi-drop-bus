@@ -1,4 +1,5 @@
 use deku::prelude::*;
+use flagset::flags;
 
 #[derive(DekuRead)]
 #[deku(type = "u8")]
@@ -12,34 +13,73 @@ pub enum Command {
     #[deku(id = "0x0b")]
     Poll,
     #[deku(id = "0x0c")]
-    CoinType { test: u8 },
+    CoinType {
+        coin_enable: CoinTypeFlags,
+        manual_dispense_enable: CoinTypeFlags,
+    },
     #[deku(id = "0x0d")]
-    Dispense { test: u8 },
+    Dispense {
+        #[deku(bits = 4)]
+        coin_type: u8,
+        #[deku(bits = 4)]
+        number_of_coins: u8,
+    },
     #[deku(id = "0x0f")]
-    Expansion,
-}
-
-#[derive(DekuRead)]
-pub struct SetupResponse {
-    level: u8,
-    coin_scaling_factor: u8,
-    decimals_places: u8,
+    Expansion { sub_command: ExpansionSubCommand },
 }
 
 #[derive(DekuRead)]
 #[deku(type = "u8")]
-pub enum Status {
-    EscrowRequest = 0b00000001,
-    ChangerPayoutBusy = 0b00000010,
-    NoCredit = 0b00000011,
-    DefectiveTubeSensor = 0b00000100,
-    DoubleArrival = 0b00000101,
-    AcceptorUnplugged = 0b00000110,
-    TubeJam = 0b00000111,
-    RomChecksumError = 0b00001000,
-    CoinRoutingError = 0b00001001,
-    ChangerBusy = 0b00001010,
-    ChangerWasReset = 0b00001011,
-    CoinJam = 0b00001100,
-    PossibleCreditedCoinRemoval = 0b00001101,
+pub enum ExpansionSubCommand {
+    #[deku(id = "0x00")]
+    Identification,
+    #[deku(id = "0x01")]
+    FeatureEnable,
+    #[deku(id = "0x02")]
+    Payout,
+    #[deku(id = "0x03")]
+    PayoutStatus,
+    #[deku(id = "0x04")]
+    PayoutValuePoll,
+    #[deku(id = "0x05")]
+    SendDiagnosticStatus,
+    #[deku(id = "0x06")]
+    SendControlledManualFillReport,
+    #[deku(id = "0x07")]
+    SendControlledManualPayoutReport,
+    #[deku(id = "0xff")]
+    Diagnostics,
+}
+
+flags! {
+    pub enum CoinTypeFlags: u16 {
+        Type0,
+        Type1,
+        Type2,
+        Type3,
+        Type4,
+        Type5,
+        Type6,
+        Type7,
+        Type8,
+        Type9,
+        Type10,
+        Type11,
+        Type12,
+        Type13,
+        Type14,
+        Type15,
+    }
+}
+
+impl<'a> DekuRead<'a> for CoinTypeFlags {
+    fn read(
+        input: &'a deku::bitvec::BitSlice<u8, deku::bitvec::Msb0>,
+        ctx: (),
+    ) -> Result<(&'a deku::bitvec::BitSlice<u8, deku::bitvec::Msb0>, Self), DekuError>
+    where
+        Self: Sized,
+    {
+        todo!()
+    }
 }
